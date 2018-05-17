@@ -1,0 +1,184 @@
+import java.sql.Statement;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.SQLSyntaxErrorException;
+import java.sql.ResultSetMetaData;
+
+public class GradeBookTester extends addData{
+	
+	private static final String driver = "org.apache.derby.jdbc.EmbeddedDriver";
+    private static final String protocol = "jdbc:derby:";
+    
+	public static void main(String[] args) 
+	{	
+		
+		
+		//connect with the database GradeBook
+		//
+		//
+		try
+		{
+			Class.forName(driver).newInstance();
+		}
+		catch (Exception err)
+		{
+			System.err.println("Unable to load the embedded driver.");
+			err.printStackTrace(System.err);
+			System.exit(0);
+        }
+		
+        String dbName = "GradeBook";
+        Connection conn = null;
+        
+        try
+        {
+        	conn = DriverManager.getConnection(protocol + dbName);
+        
+			Statement s = conn.createStatement();
+			//Statement z = conn.createStatement();
+			ResultSet rs = null;
+			
+			
+			//
+			//
+			//Student 1
+			Student s1 = new Student();
+			s1.setStudentName("Michale W");
+			s1.setStudentID(879872);
+			
+			System.out.println("\n"+s1.getStudentName() + "   ID#: "+ s1.getStudentID());		
+			System.out.println("Assignment" +"\t\t"+ "Grade");
+			rs = s.executeQuery("SELECT name, ID, Assignment, Grade "
+					+ "From GradeBook Where ID = 879872");
+			while(rs.next()){
+				
+				//for(int i =1; i<=1; i++)
+					s1.displayGrades(rs);
+			}
+			rs.close();
+			
+			//
+			//
+			//Student 2
+			Student s2 = new Student();
+			s2.setStudentName("Kenn Jogn");
+			s2.setStudentID(987772);
+			//s2
+			System.out.println("\n"+s2.getStudentName() + "   ID#: "+ s2.getStudentID());
+			
+			System.out.println("Assignment" +"\t\t"+ "Grade");
+			 
+			rs = s.executeQuery("SELECT name, ID, Assignment, Grade "
+					+"FROM GradeBook WHERE ID = 987772");
+			
+			while(rs.next()){
+				
+				//for(int i =1; i<=1; i++)
+					s2.displayGrades(rs);
+			}
+			rs.close();
+			
+			//
+			//
+			//Student 3
+			Student s3 = new Student();
+			s3.setStudentName("Mary Key");
+			s3.setStudentID(987972);
+			//s3
+			System.out.println("\n"+s3.getStudentName() + "   ID#: "+ s3.getStudentID());			
+			System.out.println("Assignment" +"\t\t"+ "Grade");
+			
+			rs = s.executeQuery("SELECT name, ID, Assignment, Grade "
+					+"FROM GradeBook WHERE ID = 987972");
+			
+			while(rs.next()){
+				
+				//for(int i =1; i<=1; i++)
+					s3.displayGrades(rs);
+			}
+			rs.close();
+			
+			//
+			//
+			//Student 4
+			Student s4 = new Student();
+			s4.setStudentName("Sarah Wong");
+			s4.setStudentID(878833);
+			//s4
+			System.out.println("\n"+s4.getStudentName() + "   ID#: "+ s4.getStudentID());			
+			System.out.println("Assignment" +"\t\t"+ "Grade");
+			
+			rs = s.executeQuery("SELECT name, ID, Assignment, Grade "
+					+"FROM GradeBook WHERE ID = 878833 ");
+			
+			while(rs.next()){
+				
+					s4.displayGrades(rs);
+			}
+			rs.close();
+			
+			//
+			//
+			//Test FindGrade for Sarah Wong
+			//
+			//
+			//
+			Student newStud1 = new Student();
+			newStud1.findGrade("Exam 1");
+			
+			
+			//Test modifyGrade method
+			//For homework1
+			//Sarah Wong
+			//
+			Student newStud =  new Student();
+			newStud.setStudentName("Sarah Wong");
+			newStud.setStudentID(878833);
+			newStud.modifyGrade(89,878833,"Homework1");
+			rs = s.executeQuery("SELECT name, ID, Assignment, Grade "
+					+"FROM GradeBook WHERE ID = 878833 ");	
+			System.out.println("Update grade for student : "+ newStud.getStudentName() +"\n");
+			System.out.println("Assignment" +"\t\t"+ "Grade");
+			
+			while(rs.next()){
+				
+				newStud.displayGrades(rs);
+			}
+			rs.close();
+			
+			//
+			//
+			//CalculateAvg()
+			//for Sarah Wong
+			//
+			//
+			Student stud = new Student();
+			System.out.println("\nThe average grade for Student ID: 878833");
+			stud.calculateAvg(878833);
+			
+			
+			//drop the table 
+			try 
+			{
+				System.out.println(" ");
+				s.execute("DROP TABLE GradeBook");
+				System.out.println("Table droped");
+			}catch(SQLException err) {
+				err.printStackTrace();
+			} 
+					
+			conn.close();
+					
+			
+        	}catch(SQLException err){
+        		System.err.println("SQL error.");
+        		err.printStackTrace(System.err);
+        		System.exit(0);
+			}
+			
+			}
+
+	}
